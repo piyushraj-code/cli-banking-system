@@ -6,10 +6,18 @@ accounts = {}
 def createAccount():
     name = input("Enter users name: ")
     initial_Balance = int(input("Enter how much do you want to deposit: "))
+    pin = int(input("Create a new 4 digit numberic pin: "))
     userName = name.split()[0]
-    accounts[userName] = Account(name, initial_Balance)
+    accounts[userName] = Account(name, initial_Balance, pin)
     print(f"Account ", userName, " with initial balance ", initial_Balance, " is created successfully.")
     returnToHome()
+
+def authenticate(accountName):
+    pin = int(input("Enter your password: "))
+    if(accountName.verifyPin(pin)):
+        return True
+    else:
+        return False
     
 def main():
     while(True):
@@ -23,7 +31,10 @@ def main():
             key = input("Enter userName: ")
             if key in accounts:
                 accountName = accounts[key]
-                print("The balance of account ", key, " is ₹", accountName.getBalance())
+                if(authenticate(accountName)):
+                    print("The balance of account ", key, " is ₹", accountName.getBalance())
+                else:
+                    print("Unauthorized Access!")
             else:
                 print("Account not found!")
             returnToHome()
@@ -33,9 +44,12 @@ def main():
             amt = int(input("Enter amount to deposit: "))
             if key in accounts:
                 accountName = accounts[key]
-                accountName.deposit(amt)
-                print("₹", amt, " is successfully deposited to account ", key, ".")
-                print("Your current balance is ₹", accountName.getBalance())
+                if(authenticate(accountName)):
+                    accountName.deposit(amt)
+                    print("₹", amt, " is successfully deposited to account ", key, ".")
+                    print("Your current balance is ₹", accountName.getBalance())
+                else:
+                    print("Unauthorized Access!")
             else:
                 print("Account not found!")
             returnToHome()
@@ -45,10 +59,13 @@ def main():
             amt = int(input("Enter amount to withdraw: "))
             if key in accounts:
                 accountName = accounts[key]
-                accountName.withdraw(amt)
-                if(accountName.transactionSuccess):
-                    print("₹", amt, " is successfully withdrawn from account ", key, ".")
-                print("Your current balance is ₹",accountName.getBalance())
+                if(authenticate(accountName)):
+                    accountName.withdraw(amt)
+                    if(accountName.transactionSuccess):
+                         print("₹", amt, " is successfully withdrawn from account ", key, ".")
+                         print("Your current balance is ₹",accountName.getBalance())
+                else:
+                    print("Unauthorized Access!")
             else:
                 print("Account not found!")
             returnToHome()

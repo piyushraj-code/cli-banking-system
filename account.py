@@ -1,7 +1,8 @@
 class Account:
-    def __init__(self, name, initial_balance):
+    def __init__(self, name, initial_balance, pin):
         self.name = name
         self.__balance = initial_balance
+        self.__pin = pin
 
     def deposit(self, amount):
         if (amount > 0):
@@ -17,3 +18,6 @@ class Account:
 
     def getBalance(self):
         return self.__balance
+    
+    def verifyPin(self, pin):
+        return self.__pin == pin
